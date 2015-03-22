@@ -48,6 +48,7 @@ function activate()
 			uri = "/" .. uri
 			retval, err = os.execute("rm \"" .. uri .. "\"")
 		else
+			uri = string.gsub(uri, "/", "\\")
 			retval, err = os.execute("del \"" .. uri .. "\"")
 		end
 	end
