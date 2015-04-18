@@ -49,21 +49,21 @@ function activate()
 			retval, err = os.execute("rm \"" .. uri .. "\"")
 		else
 			uri = string.gsub(uri, "/", "\\")
-			retval, err = os.execute("del \"" .. uri .. "\"")
+			retval, err = os.remove(uri)
 		end
 	end
-	if (retval == nil) then
+	if (retval ~= nil) then
+		local id = vlc.playlist.current()
+		vlc.playlist.delete(id)
+		vlc.playlist.gotoitem(id + 1)
+		vlc.deactivate()
+	else
 		vlc.msg.info("[vlc-delete] error: " .. err)
 		d = vlc.dialog("VLC Delete")
 		d:add_label("Could not remove \"" .. uri .. "\"", 1, 1, 1, 1)
 		d:add_label(err, 1, 2, 1, 1)
 		d:add_button("OK", click_ok, 1, 3, 1, 1)
 		d:show()
-	else
-		local id = vlc.playlist.current()
-		vlc.playlist.delete(id)
-		vlc.playlist.gotoitem(id + 1)
-		vlc.deactivate()
 	end
 end
 
