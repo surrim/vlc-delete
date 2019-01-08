@@ -29,13 +29,13 @@ delete the current file from your playlist and <b>disk</b> with one click.<br>
 This extension has been tested on GNU Linux with VLC 2.1.5.<br>
 The author is not responsible for damage caused by this extension.
 		]];
-   }
+	}
 end
 
 function activate()
 	local item = vlc.input.item()
 	local uri = item:uri()
-	uri = string.gsub(uri, '^file:///', '')
+	uri = string.gsub(uri, "^file:///", "")
 	uri = vlc.strings.decode_uri(uri)
 	vlc.msg.info("[vlc-delete] removing: " .. uri)
 	retval, err = os.execute("trash-put --help > /dev/null")
