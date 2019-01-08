@@ -38,26 +38,29 @@ function activate()
 	uri = string.gsub(uri, "^file:///", "")
 	uri = vlc.strings.decode_uri(uri)
 	vlc.msg.info("[vlc-delete] removing: " .. uri)
-	retval, err = os.execute("trash-put --help > /dev/null")
-	if (retval ~= nil) then
-		uri = "/" .. uri
-		retval, err = os.execute("trash-put \"" .. uri .. "\"")
-	else
-		retval, err = os.execute("rm --help > /dev/null")
+	local id = vlc.playlist.current()
+	vlc.playlist.delete(id)
+	vlc.playlist.gotoitem(id + 1)
+	vlc.deactivate()
+
+	if (package.config:sub(1,1) == "/") then -- not windows
+		retval, err = os.execute("trash-put --help > /dev/null")
 		if (retval ~= nil) then
 			uri = "/" .. uri
-			retval, err = os.execute("rm \"" .. uri .. "\"")
+			retval, err = os.execute("trash-put \"" .. uri .. "\"")
 		else
-			uri = string.gsub(uri, "/", "\\")
-			retval, err = os.remove(uri)
+			retval, err = os.execute("rm --help > /dev/null")
+			if (retval ~= nil) then
+				uri = "/" .. uri
+				retval, err = os.execute("rm \"" .. uri .. "\"")
+			end
 		end
+	else -- windows
+		uri = string.gsub(uri, "/", "\\")
+		-- retval, err = os.execute("del \"" .. uri .. "\"")
+		retval, err = os.remove(uri)
 	end
-	if (retval ~= nil) then
-		local id = vlc.playlist.current()
-		vlc.playlist.delete(id)
-		vlc.playlist.gotoitem(id + 1)
-		vlc.deactivate()
-	else
+	if (retval == nil) then
 		vlc.msg.info("[vlc-delete] error: " .. err)
 		d = vlc.dialog("VLC Delete")
 		d:add_label("Could not remove \"" .. uri .. "\"", 1, 1, 1, 1)
