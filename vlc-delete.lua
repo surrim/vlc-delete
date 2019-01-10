@@ -32,16 +32,43 @@ The author is not responsible for damage caused by this extension.
 	}
 end
 
+function fileExists(file)
+	return io.popen("if exist " .. file .. " (echo 1)") : read "*l" == "1"
+end
+
+function sleep(seconds)
+	local t0 = os.clock()
+	local tOriginal = t0
+	while os.clock() - t0 <= seconds and os.clock() >= tOriginal do end
+end
+
+function windowsDelete(file, trys, pause)
+	if not fileExists("\"" .. file .. "\"") then return nil, "File does not exist" end
+	for i = trys, 1, -1
+	do
+		retval, err = os.remove(file)
+		--retval, err = os.execute("del " .. file )
+		if retval == true then
+			return true
+		end
+		sleep(pause)
+	end
+	return {nil, "Unable to delete file"}
+end
+
+function removeItem()
+	local id = vlc.playlist.current()
+	vlc.playlist.delete(id)
+	vlc.playlist.gotoitem(id + 1)
+	vlc.deactivate()
+end
+
 function activate()
 	local item = vlc.input.item()
 	local uri = item:uri()
 	uri = string.gsub(uri, "^file:///", "")
 	uri = vlc.strings.decode_uri(uri)
 	vlc.msg.info("[vlc-delete] removing: " .. uri)
-	local id = vlc.playlist.current()
-	vlc.playlist.delete(id)
-	vlc.playlist.gotoitem(id + 1)
-	vlc.deactivate()
 
 	if (package.config:sub(1,1) == "/") then -- not windows
 		retval, err = os.execute("trash-put --help > /dev/null")
@@ -55,11 +82,13 @@ function activate()
 				retval, err = os.execute("rm \"" .. uri .. "\"")
 			end
 		end
+		if (retval ~= nil) then removeItem() end
 	else -- windows
+		removeItem() -- remove from playlist first so the file isnt locked by vlc
 		uri = string.gsub(uri, "/", "\\")
-		-- retval, err = os.execute("del \"" .. uri .. "\"")
-		retval, err = os.remove(uri)
+		retval, err = windowsDelete(uri, 3, 1)
 	end
+
 	if (retval == nil) then
 		vlc.msg.info("[vlc-delete] error: " .. err)
 		d = vlc.dialog("VLC Delete")
