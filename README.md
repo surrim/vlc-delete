@@ -1,7 +1,7 @@
 # Install #
 
 ## Windows ##
-Copy vlc-delete.lua to C:\Program Files (x86)\VideoLAN\VLC\lua\extensions\ and restart the VLC player.
+Copy vlc-delete.lua to C:\Program Files\VideoLAN\VLC\lua\extensions\ and restart the VLC player.
 
 ## Linux ##
 Copy the vlc-delete.lua file to ~/.local/share/vlc/lua/extensions/ and restart the VLC player.
