@@ -70,7 +70,7 @@ function activate()
 	uri = vlc.strings.decode_uri(uri)
 	vlc.msg.info("[vlc-delete] removing: " .. uri)
 
-	if (package.config:sub(1,1) == "/") then -- not windows
+	if (package.config:sub(1, 1) == "/") then -- not windows
 		retval, err = os.execute("trash-put --help > /dev/null")
 		if (retval ~= nil) then
 			uri = "/" .. uri
