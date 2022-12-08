@@ -1,5 +1,5 @@
 --[[
-	Copyright 2015-2019 surrim
+	Copyright 2015-2022 surrim
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -25,8 +25,8 @@ function descriptor()
 		description = [[
 <h1>vlc-delete</h1>"
 When you're playing a file, use VLC Delete to
-delete the current file from your playlist and <b>disk</b> with one click.<br>
-This extension has been tested on GNU Linux with VLC 2.1.5.<br>
+delete the current file from your playlist and <b>disk</b> with one click.<br />
+This extension has been tested on GNU Linux with VLC 2.x and 3.x.<br />
 The author is not responsible for damage caused by this extension.
 		]];
 	}
