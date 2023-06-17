@@ -59,8 +59,9 @@ end
 
 function remove_from_playlist_and_hdd()
 	local id = vlc.playlist.current()
+	vlc.playlist.next()
+	sleep(1)
 	vlc.playlist.delete(id)
-	vlc.playlist.gotoitem(id + 1)
 	vlc.deactivate()
 end
 
