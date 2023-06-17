@@ -70,24 +70,24 @@ function activate()
 	local uri = item:uri()
 	uri = string.gsub(uri, "^file:///", "")
 	uri = vlc.strings.decode_uri(uri)
-	vlc.msg.info("[vlc-delete] removing: " .. uri)
 
 	if (package.config:sub(1, 1) == "/") then -- not windows
+		uri = "/" .. uri
+		vlc.msg.info("[vlc-delete] removing: " .. uri)
 		retval, err = os.execute("trash-put --help > /dev/null")
 		if (retval ~= nil) then
-			uri = "/" .. uri
 			retval, err = os.execute("trash-put \"" .. uri .. "\"")
 		else
 			retval, err = os.execute("rm --help > /dev/null")
 			if (retval ~= nil) then
-				uri = "/" .. uri
 				retval, err = os.execute("rm \"" .. uri .. "\"")
 			end
 		end
 		if (retval ~= nil) then remove_from_playlist_and_hdd() end
 	else -- windows
-		remove_from_playlist_and_hdd() -- remove from playlist first so the file isnt locked by vlc
 		uri = string.gsub(uri, "/", "\\")
+		vlc.msg.info("[vlc-delete] removing: " .. uri)
+		remove_from_playlist_and_hdd() -- remove first so the file isn't locked by VLC
 		retval, err = windows_delete(uri, 3, 1)
 	end
 
