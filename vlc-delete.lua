@@ -62,7 +62,6 @@ function remove_from_playlist_and_hdd()
 	vlc.playlist.next()
 	sleep(1)
 	vlc.playlist.delete(id)
-	vlc.deactivate()
 end
 
 function activate()
@@ -98,12 +97,14 @@ function activate()
 		d:add_label(err, 1, 2, 1, 1)
 		d:add_button("OK", click_ok, 1, 3, 1, 1)
 		d:show()
+	else
+		deactivate()
 	end
 end
 
 function click_ok()
 	d:delete()
-	vlc.deactivate()
+	deactivate()
 end
 
 function deactivate()
