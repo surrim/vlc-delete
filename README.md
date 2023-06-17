@@ -1,16 +1,32 @@
 # Install
 
 ## Windows
-Copy `vlc-delete.lua` to `C:\Program Files\VideoLAN\VLC\lua\extensions\` and restart the VLC Media Player.
+
+Copy `vlc-delete.lua` to `%appdata%\Roaming\vlc\lua\extensions\` and restart the VLC Media Player.
+
+### Installation script (requires Windows 10 / curl)
+
+```bash
+mkdir %appdata%\Roaming\vlc\lua\extensions\
+curl -# -o %appdata%\Roaming\vlc\lua\extensions\vlc-delete.lua https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua
+```
 
 ## Linux
+
 Copy the `vlc-delete.lua` file to `~/.local/share/vlc/lua/extensions/` and restart the VLC Media Player.
 
 ### Installation script
 
 ```bash
 mkdir -p ~/.local/share/vlc/lua/extensions/
-wget https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua -O ~/.local/share/vlc/lua/extensions/vlc-delete.lua
+curl -# -o ~/.local/share/vlc/lua/extensions/vlc-delete.lua https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua
+```
+
+### Installation script for Flatpak
+
+```bash
+mkdir -p ~/.var/app/org.videolan.VLC/data/vlc/lua/extensions/
+curl -# -o ~/.var/app/org.videolan.VLC/data/vlc/lua/extensions/vlc-delete.lua https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua
 ```
 
 Note: If [trash-cli](https://pypi.org/project/trash-cli/) is installed videos will be moved to the recycle bin instead of removing them directly.
