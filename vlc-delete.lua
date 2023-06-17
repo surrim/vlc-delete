@@ -1,5 +1,5 @@
 --[[
-	Copyright 2015-2022 surrim
+	Copyright 2015-2023 surrim
 
 	This program is free software: you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -33,7 +33,8 @@ The author is not responsible for damage caused by this extension.
 end
 
 function fileExists(file)
-	return io.popen("if exist " .. file .. " (echo 1)") : read "*l" == "1"
+	retval, err = os.execute("if exist \"" .. file .. "\" @(call)")
+	return type(retval) == "number" and retval == 0
 end
 
 function sleep(seconds)
@@ -43,17 +44,18 @@ function sleep(seconds)
 end
 
 function windowsDelete(file, trys, pause)
-	if not fileExists("\"" .. file .. "\"") then return nil, "File does not exist" end
+	if not fileExists(file) then
+		return nil, "File does not exist"
+	end
 	for i = trys, 1, -1
 	do
-		retval, err = os.remove(file)
-		--retval, err = os.execute("del " .. file )
-		if retval == true then
+		os.execute("del /q \"" .. file .. "\"")
+		if not fileExists(file) then
 			return true
 		end
 		sleep(pause)
 	end
-	return {nil, "Unable to delete file"}
+	return nil, "Unable to delete file"
 end
 
 function removeItem()
