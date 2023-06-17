@@ -91,7 +91,7 @@ function activate()
 	end
 
 	if (retval == nil) then
-		vlc.msg.info("[vlc-delete] error: " .. err)
+		vlc.msg.info("[vlc-delete] error: " .. (err or "nil"))
 		d = vlc.dialog("VLC Delete")
 		d:add_label("Could not remove \"" .. uri .. "\"", 1, 1, 1, 1)
 		d:add_label(err, 1, 2, 1, 1)
