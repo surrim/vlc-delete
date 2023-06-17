@@ -65,7 +65,7 @@ function remove_from_playlist_and_hdd()
 end
 
 function activate()
-	local item = vlc.input.item()
+	local item = (vlc.player or vlc.input).item()
 	local uri = item:uri()
 	uri = string.gsub(uri, "^file:///", "")
 	uri = vlc.strings.decode_uri(uri)
