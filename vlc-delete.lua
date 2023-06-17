@@ -64,6 +64,11 @@ function remove_from_playlist_and_hdd()
 	vlc.playlist.delete(id)
 end
 
+function command_exists(command)
+	retval, err = os.execute(command)
+	return retval ~= nil
+end
+
 function activate()
 	local item = (vlc.player or vlc.input).item()
 	local uri = item:uri()
@@ -72,17 +77,24 @@ function activate()
 
 	if (package.config:sub(1, 1) == "/") then -- not windows
 		uri = "/" .. uri
-		vlc.msg.info("[vlc-delete] removing: " .. uri)
-		retval, err = os.execute("trash-put --help > /dev/null")
-		if (retval ~= nil) then
+		
+		trash_put_exists = command_exists("trash-put --version > /dev/null")
+		rm_exists = command_exists("rm --version > /dev/null")
+
+		if trash_put_exists then
+			vlc.msg.info("[vlc-delete] removing: " .. uri .. " (using trash-put)")
 			retval, err = os.execute("trash-put \"" .. uri .. "\"")
+		elseif rm_exists then
+			vlc.msg.info("[vlc-delete] removing: " .. uri .. " (using rm)")
+			retval, err = os.execute("rm \"" .. uri .. "\"")
 		else
-			retval, err = os.execute("rm --help > /dev/null")
-			if (retval ~= nil) then
-				retval, err = os.execute("rm \"" .. uri .. "\"")
-			end
+			vlc.msg.info("[vlc-delete] removing: " .. uri .. " (using os.remove)")
+			retval, err = os.remove(file)
 		end
-		if (retval ~= nil) then remove_from_playlist_and_hdd() end
+
+		if (retval ~= nil) then
+			remove_from_playlist_and_hdd()
+		end
 	else -- windows
 		uri = string.gsub(uri, "/", "\\")
 		vlc.msg.info("[vlc-delete] removing: " .. uri)
