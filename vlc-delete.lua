@@ -69,17 +69,27 @@ function command_exists(command)
 	return retval ~= nil
 end
 
-function activate()
+function current_uri_and_os()
 	local item = (vlc.player or vlc.input).item()
 	local uri = item:uri()
-	uri = string.gsub(uri, "^file:///", "")
-	uri = vlc.strings.decode_uri(uri)
+	local is_posix = (package.config:sub(1, 1) == "/")
+	if uri:find("^file:///") ~= nil then
+		uri = string.gsub(uri, "^file:///", "")
+		uri = vlc.strings.decode_uri(uri)
+		if is_posix then
+			uri = "/" .. uri
+		else
+			uri = string.gsub(uri, "/", "\\")
+		end
+	end
+	return uri, is_posix
+end
 
-	if (package.config:sub(1, 1) == "/") then -- not windows
-		uri = "/" .. uri
-		
-		trash_put_exists = command_exists("trash-put --version > /dev/null")
-		rm_exists = command_exists("rm --version > /dev/null")
+function activate()
+	local uri, is_posix = current_uri_and_os()
+	if is_posix then
+		local trash_put_exists = command_exists("trash-put --version > /dev/null")
+		local rm_exists = command_exists("rm --version > /dev/null")
 
 		if trash_put_exists then
 			vlc.msg.info("[vlc-delete] removing: " .. uri .. " (using trash-put)")
@@ -94,17 +104,16 @@ function activate()
 			retval, err = os.remove(file)
 		end
 
-		if (retval ~= nil) then
+		if retval ~= nil then
 			remove_from_playlist_and_hdd()
 		end
-	else -- windows
-		uri = string.gsub(uri, "/", "\\")
+	else
 		vlc.msg.info("[vlc-delete] removing: " .. uri)
 		remove_from_playlist_and_hdd() -- remove first so the file isn't locked by VLC
 		retval, err = windows_delete(uri, 3, 1)
 	end
 
-	if (retval == nil) then
+	if retval == nil then
 		vlc.msg.info("[vlc-delete] error: " .. (err or "nil"))
 		d = vlc.dialog("VLC Delete")
 		d:add_label("Could not remove \"" .. uri .. "\"", 1, 1, 1, 1)
