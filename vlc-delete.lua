@@ -83,9 +83,11 @@ function activate()
 
 		if trash_put_exists then
 			vlc.msg.info("[vlc-delete] removing: " .. uri .. " (using trash-put)")
+			uri = string.gsub(uri, "\"", "\\\"")
 			retval, err = os.execute("trash-put \"" .. uri .. "\"")
 		elseif rm_exists then
 			vlc.msg.info("[vlc-delete] removing: " .. uri .. " (using rm)")
+			uri = string.gsub(uri, "\"", "\\\"")
 			retval, err = os.execute("rm \"" .. uri .. "\"")
 		else
 			vlc.msg.info("[vlc-delete] removing: " .. uri .. " (using os.remove)")
