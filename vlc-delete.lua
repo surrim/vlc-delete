@@ -33,7 +33,7 @@ The author is not responsible for damage caused by this extension.
 end
 
 function file_exists(file)
-	retval, err = os.execute("if exist \"" .. file .. "\" @(call)")
+	retval, err = os.execute("if exist \"" .. file .. "\" (exit 0) else (exit 1)")
 	return type(retval) == "number" and retval == 0
 end
 
