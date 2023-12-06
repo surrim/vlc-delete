@@ -21,11 +21,11 @@ function descriptor()
 		version = "0.1";
 		author = "surrim";
 		url = "https://github.com/surrim/vlc-delete/";
-		shortdesc = "&Remove current file from playlist and disk";
+		shortdesc = "&Remove current file from playlist and filesystem";
 		description = [[
 <h1>vlc-delete</h1>"
 When you're playing a file, use VLC Delete to
-delete the current file from your playlist and <b>disk</b> with one click.<br />
+delete the current file from your playlist <b>and filesystem</b> with one click.<br />
 This extension has been tested on GNU Linux with VLC 2.x and 3.x.<br />
 The author is not responsible for damage caused by this extension.
 		]];
@@ -57,7 +57,7 @@ function windows_delete(file, trys, pause)
 	return nil, "Unable to delete file"
 end
 
-function remove_from_playlist_and_hdd()
+function remove_from_playlist_and_filesystem()
 	local id = vlc.playlist.current()
 	vlc.playlist.next()
 	sleep(1)
@@ -105,11 +105,11 @@ function activate()
 		end
 
 		if retval ~= nil then
-			remove_from_playlist_and_hdd()
+			remove_from_playlist_and_filesystem()
 		end
 	else
 		vlc.msg.info("[vlc-delete] removing: " .. uri)
-		remove_from_playlist_and_hdd() -- remove first so the file isn't locked by VLC
+		remove_from_playlist_and_filesystem() -- remove first so the file isn't locked by VLC
 		retval, err = windows_delete(uri, 3, 1)
 	end
 
