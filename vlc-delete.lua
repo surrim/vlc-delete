@@ -57,7 +57,7 @@ function windows_delete(file, trys, pause)
 	return nil, "Unable to delete file"
 end
 
-function remove_from_playlist_and_hdd()
+function remove_from_playlist_and_disk()
 	local id = vlc.playlist.current()
 	vlc.playlist.next()
 	sleep(1)
@@ -105,11 +105,11 @@ function activate()
 		end
 
 		if retval ~= nil then
-			remove_from_playlist_and_hdd()
+			remove_from_playlist_and_disk()
 		end
 	else
 		vlc.msg.info("[vlc-delete] removing: " .. uri)
-		remove_from_playlist_and_hdd() -- remove first so the file isn't locked by VLC
+		remove_from_playlist_and_disk() -- remove first so the file isn't locked by VLC
 		retval, err = windows_delete(uri, 3, 1)
 	end
 
