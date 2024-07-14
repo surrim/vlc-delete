@@ -2,13 +2,13 @@
 
 ## Windows
 
-Copy `vlc-delete.lua` to `%appdata%\Roaming\vlc\lua\extensions\` and restart the VLC Media Player.
+Copy `vlc-delete.lua` to `%appdata%\vlc\lua\extensions\` and restart the VLC Media Player.
 
 ### Installation script (requires Windows 10 / curl)
 
 ```bash
-mkdir %appdata%\Roaming\vlc\lua\extensions\
-curl -# -o %appdata%\Roaming\vlc\lua\extensions\vlc-delete.lua https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua
+mkdir %appdata%\vlc\lua\extensions\
+curl -# -o %appdata%\vlc\lua\extensions\vlc-delete.lua https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua
 ```
 
 ## Linux
