@@ -40,6 +40,21 @@ When playing a video you can click on `View` → `Remove current file from playl
 - There is no *fixed* shortcut key; it depends on the menu language.  
   For instance in English: Press and hold `Alt`  to activate the hotkey navigation, then press `i` (`Vi̲ew`), then `r` (`R̲emove current file from playlist and disk`). I haven't found a solution to implement a fixed key; probably it's not supported by the VLC Media Player.  
   ![Hotkeys animation](https://raw.githubusercontent.com/surrim/vlc-delete/master/hotkeys.webp)
+  - For AutoHotKey v2 and English menus, you can use the following script.
+
+```
+#Requires AutoHotkey v2.0
+
+#HotIf WinActive("ahk_exe vlc.exe")
+^Delete:: {
+    Send("{Blind}{Ctrl up}{Delete up}")
+    Send("{Blind}{Alt down}{i down}{i up}{r down}{r up}{Alt up}")
+}
+#HotIf
+```
+
+  Thanks for contributing [DanKaplanSES](https://github.com/DanKaplanSES) and [abramter](https://github.com/abramter)
+
 - Windows: UNC paths like `\SERVER\Share\File.mp4` are not working.  
   As a workaround, you could use `net use P: "\uncpath"` in the Windows terminal and open the file with a regular path.
   Thanks for contributing [Taomyn](https://github.com/Taomyn) and [freeload101](https://github.com/freeload101)
