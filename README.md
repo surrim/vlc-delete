@@ -60,7 +60,8 @@ When playing a video you can click on `View` → `Remove current file from playl
   Thanks for contributing [Taomyn](https://github.com/Taomyn) and [freeload101](https://github.com/freeload101)
 - Windows: Video can't be deleted if the file name contains emojis.  
   Thanks for contributing [Jonas1312](https://github.com/Jonas1312)
+- Does not work with VLC portable edition
+  Thanks for contributing [fun29](https://github.com/fun29)
 
 If you create a new issue please include your VLC Version number and operating system. Otherwise it's hard to reproduce.  
 The biggest help would be to contribute some Lua Code.
-
