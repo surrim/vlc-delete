@@ -58,9 +58,9 @@ function windows_delete(file, trys, pause)
 end
 
 function remove_from_playlist()
-    local id = vlc.playlist.current()
-    vlc.playlist.next()
-    sleep(1)  -- wait for current item change
+	local id = vlc.playlist.current()
+	vlc.playlist.next()
+	sleep(1)  -- wait for current item change
 
 	vlc.playlist.delete(id)
 end
@@ -88,10 +88,10 @@ end
 
 function activate()
 	local uri, is_posix = current_uri_and_os()
-    vlc.msg.info("[vlc-delete] removing: " .. uri)
+	vlc.msg.info("[vlc-delete] removing: " .. uri)
 	remove_from_playlist()
 
-    if is_posix then
+	if is_posix then
 		local trash_put_exists = command_exists("trash-put --version > /dev/null")
 		local rm_exists = command_exists("rm --version > /dev/null")
 
