@@ -57,10 +57,10 @@ function windows_delete(file, trys, pause)
 	return nil, "Unable to delete file"
 end
 
-function remove_from_playlist_and_filesystem()
+function remove_from_playlist()
 	local id = vlc.playlist.current()
 	vlc.playlist.next()
-	sleep(1)
+	sleep(1) -- wait for current item change
 	vlc.playlist.delete(id)
 end
 
@@ -87,34 +87,32 @@ end
 
 function activate()
 	local uri, is_posix = current_uri_and_os()
+	vlc.msg.info("[vlc-delete] removing: " .. uri)
+	remove_from_playlist()
+
 	if is_posix then
 		local trash_put_exists = command_exists("trash-put --version > /dev/null")
 		local rm_exists = command_exists("rm --version > /dev/null")
 
 		if trash_put_exists then
-			vlc.msg.info("[vlc-delete] removing: " .. uri .. " (using trash-put)")
+			vlc.msg.dbg("[vlc-delete] removing using trash-put")
 			uri = string.gsub(uri, "\"", "\\\"")
 			retval, err = os.execute("trash-put \"" .. uri .. "\"")
 		elseif rm_exists then
-			vlc.msg.info("[vlc-delete] removing: " .. uri .. " (using rm)")
+			vlc.msg.dbg("[vlc-delete] removing using rm")
 			uri = string.gsub(uri, "\"", "\\\"")
 			retval, err = os.execute("rm \"" .. uri .. "\"")
 		else
-			vlc.msg.info("[vlc-delete] removing: " .. uri .. " (using os.remove)")
-			retval, err = os.remove(file)
-		end
-
-		if retval ~= nil then
-			remove_from_playlist_and_filesystem()
+			vlc.msg.dbg("[vlc-delete] removing using os.remove")
+			retval, err = os.remove(uri)
 		end
 	else
-		vlc.msg.info("[vlc-delete] removing: " .. uri)
-		remove_from_playlist_and_filesystem() -- remove first so the file isn't locked by VLC
+		vlc.msg.dbg("[vlc-delete] removing using del")
 		retval, err = windows_delete(uri, 3, 1)
 	end
 
 	if retval == nil then
-		vlc.msg.info("[vlc-delete] error: " .. (err or "nil"))
+		vlc.msg.err("[vlc-delete] error: " .. (err or "nil"))
 		d = vlc.dialog("VLC Delete")
 		d:add_label("Could not remove \"" .. uri .. "\"", 1, 1, 1, 1)
 		d:add_label(err, 1, 2, 1, 1)
