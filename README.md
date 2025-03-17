@@ -18,15 +18,12 @@ Copy the `vlc-delete.lua` file to `~/.local/share/vlc/lua/extensions/` and resta
 ### Installation script
 
 ```bash
-mkdir -p ~/.local/share/vlc/lua/extensions/
-curl -# -o ~/.local/share/vlc/lua/extensions/vlc-delete.lua https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua
-```
+EXTENSIONS_FOLDER="~/.local/share/vlc/lua/extensions"
+# EXTENSIONS_FOLDER="~/.var/app/org.videolan.VLC/data/vlc/lua/extensions" # for Flatpak
+# EXTENSIONS_FOLDER="~/snap/vlc/current/.local/share/vlc/lua/extensions" # for Snap
 
-### Installation script for Flatpak
-
-```bash
-mkdir -p ~/.var/app/org.videolan.VLC/data/vlc/lua/extensions/
-curl -# -o ~/.var/app/org.videolan.VLC/data/vlc/lua/extensions/vlc-delete.lua https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua
+mkdir -p "$EXTENSIONS_FOLDER"
+curl -# -o "$EXTENSIONS_FOLDER/vlc-delete.lua" "https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua"
 ```
 
 Note: If [trash-cli](https://pypi.org/project/trash-cli/) is installed videos will be moved to the recycle bin instead of removing them directly.
