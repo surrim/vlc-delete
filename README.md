@@ -18,9 +18,9 @@ Copy the `vlc-delete.lua` file to `~/.local/share/vlc/lua/extensions/` and resta
 ### Installation script
 
 ```bash
-EXTENSIONS_FOLDER="~/.local/share/vlc/lua/extensions"
-# EXTENSIONS_FOLDER="~/.var/app/org.videolan.VLC/data/vlc/lua/extensions" # for Flatpak
-# EXTENSIONS_FOLDER="~/snap/vlc/current/.local/share/vlc/lua/extensions" # for Snap
+EXTENSIONS_FOLDER="$HOME/.local/share/vlc/lua/extensions"
+# EXTENSIONS_FOLDER="$HOME/.var/app/org.videolan.VLC/data/vlc/lua/extensions" # for Flatpak
+# EXTENSIONS_FOLDER="$HOME/snap/vlc/current/.local/share/vlc/lua/extensions" # for Snap
 
 mkdir -p "$EXTENSIONS_FOLDER"
 curl -# -o "$EXTENSIONS_FOLDER/vlc-delete.lua" "https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua"
