@@ -33,8 +33,12 @@ The author is not responsible for damage caused by this extension.
 end
 
 function file_exists(file)
-	retval, err = os.execute("if exist \"" .. file .. "\" (exit 0) else (exit 1)")
-	return type(retval) == "number" and retval == 0
+	local f = io.open(file, "rb")
+	if f then
+		f:close()
+		return true
+	end
+	return false
 end
 
 function sleep(seconds)
@@ -43,18 +47,34 @@ function sleep(seconds)
 end
 
 function windows_delete(file, trys, pause)
-	if not file_exists(file) then
-		return nil, "File does not exist"
+	local script_path = os.getenv("TEMP") .. "\\vlc_delete_silent.ps1"
+	local f = io.open(script_path, "wb")
+	if not f then
+		return nil, "Unable to create PowerShell script"
 	end
-	for i = trys, 1, -1
-	do
-		os.execute("del /q \"" .. file .. "\"")
+	local ps_script = [[
+$h = Get-Host
+$h.UI.RawUI.WindowSize = New-Object Management.Automation.Host.Size(40, 5)
+$path = ']] .. file:gsub("'", "''") .. [['
+if (Test-Path -LiteralPath $path) {
+	Remove-Item -LiteralPath $path -Force
+	exit 0
+} else {
+	Write-Host "File not found"
+	exit 1
+}
+]]
+	f:write('\239\187\191')  -- UTF-8 BOM
+	f:write(ps_script)
+	f:close()
+	local cmd = 'powershell -ExecutionPolicy Bypass -WindowStyle Hidden -File "' .. script_path .. '"'
+	local result = os.execute(cmd)
+	if result == 0 then
 		if not file_exists(file) then
 			return true
 		end
-		sleep(pause)
+		return nil, "File may still exist after deletion"
 	end
-	return nil, "Unable to delete file"
 end
 
 function remove_from_playlist()
