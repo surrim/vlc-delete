@@ -18,14 +18,14 @@
 function descriptor()
 	return {
 		title = "VLC Delete";
-		version = "0.1";
+		version = "0.2";
 		author = "surrim";
 		url = "https://github.com/surrim/vlc-delete/";
-		shortdesc = "&Remove current file from playlist and filesystem";
+		shortdesc = "Remove current file from playlist and filesystem";
 		description = [[
 <h1>vlc-delete</h1>"
 When you're playing a file, use VLC Delete to
-delete the current file from your playlist <b>and filesystem</b> with one click.<br />
+delete the current file from your playlist <b>and filesystem</b> with confirmation dialog.<br />
 This extension has been tested on GNU Linux with VLC 2.x and 3.x.<br />
 The author is not responsible for damage caused by this extension.
 		]];
@@ -85,7 +85,32 @@ function current_uri_and_os()
 	return uri, is_posix
 end
 
+dlg = nil
+
 function activate()
+	show_confirmation_dialog()
+end
+
+function show_confirmation_dialog()
+	local uri, is_posix = current_uri_and_os()
+	if not uri then
+		vlc.msg.err("[vlc-delete] error: Could not get current file")
+		return
+	end
+	
+	dlg = vlc.dialog("VLC Delete - Confirmation")
+	dlg:add_label("Are you sure you want to delete this file from disk?", 1, 1, 2, 1)
+	dlg:add_label("File: " .. uri, 1, 2, 2, 1)
+	dlg:add_button("Remove", click_remove, 1, 3, 1, 1)
+	dlg:add_button("Cancel", click_cancel, 2, 3, 1, 1)
+end
+
+function click_remove()
+	if dlg then
+		dlg:delete()
+		dlg = nil
+	end
+	
 	local uri, is_posix = current_uri_and_os()
 	vlc.msg.info("[vlc-delete] removing: " .. uri)
 	remove_from_playlist()
@@ -123,12 +148,24 @@ function activate()
 	end
 end
 
+function click_cancel()
+	if dlg then
+		dlg:delete()
+		dlg = nil
+	end
+	deactivate()
+end
+
 function click_ok()
 	d:delete()
 	deactivate()
 end
 
 function deactivate()
+	if dlg then
+		dlg:delete()
+		dlg = nil
+	end
 	vlc.deactivate()
 end
 
