@@ -21,6 +21,7 @@ Copy the `vlc-delete.lua` file to `~/.local/share/vlc/lua/extensions/` and resta
 EXTENSIONS_FOLDER="$HOME/.local/share/vlc/lua/extensions"
 # EXTENSIONS_FOLDER="$HOME/.var/app/org.videolan.VLC/data/vlc/lua/extensions" # for Flatpak
 # EXTENSIONS_FOLDER="$HOME/snap/vlc/current/.local/share/vlc/lua/extensions" # for Snap
+# EXTENSIONS_FOLDER="$HOME/Library/Application Support/org.videolan.vlc/lua/extensions" # for Mac
 
 mkdir -p "$EXTENSIONS_FOLDER"
 curl -# -o "$EXTENSIONS_FOLDER/vlc-delete.lua" "https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua"
@@ -50,7 +51,7 @@ When playing a video you can click on `View` → `Remove current file from playl
 #HotIf
 ```
 
-  Thanks for contributing [DanKaplanSES](https://github.com/DanKaplanSES) and [abramter](https://github.com/abramter)
+Thanks for contributing [DanKaplanSES](https://github.com/DanKaplanSES), [abramter](https://github.com/abramter) and [saiqulhaq](https://github.com/saiqulhaq)
 
 - Windows: UNC paths like `\SERVER\Share\File.mp4` are not working.  
   As a workaround, you could use `net use P: "\uncpath"` in the Windows terminal and open the file with a regular path.
