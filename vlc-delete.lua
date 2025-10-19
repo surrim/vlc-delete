@@ -15,6 +15,11 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ]]--
 
+-- Configuration:
+-- Set ASK_CONFIRMATION = true if you want the extension to show a confirmation
+-- dialog before removing the current file. Default is false (no confirmation).
+local ASK_CONFIRMATION = false
+
 function descriptor()
 	return {
 		title = "VLC Delete";
@@ -88,7 +93,15 @@ end
 dlg = nil
 
 function activate()
-	show_confirmation_dialog()
+	-- If ASK_CONFIRMATION is true, show the confirmation dialog.
+	-- Otherwise proceed directly to removal (one keypress behavior).
+	if ASK_CONFIRMATION then
+		show_confirmation_dialog()
+	else
+		-- Call click_remove directly to perform the removal immediately.
+		-- click_remove is safe to call with dlg == nil.
+		click_remove()
+	end
 end
 
 function show_confirmation_dialog()
