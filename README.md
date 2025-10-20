@@ -51,7 +51,8 @@ When playing a video you can click on `View` → `Remove current file from playl
 #HotIf
 ```
 
-Thanks for contributing [DanKaplanSES](https://github.com/DanKaplanSES), [abramter](https://github.com/abramter) and [saiqulhaq](https://github.com/saiqulhaq)
+Thanks for contributing [DanKaplanSES](https://github.com/DanKaplanSES), [abramter](https://github.com/abramter),
+[saiqulhaq](https://github.com/saiqulhaq) and [Francisco Corrales Morales](https://github.com/franciscocorrales).
 
 - Windows: UNC paths like `\SERVER\Share\File.mp4` are not working.  
   As a workaround, you could use `net use P: "\uncpath"` in the Windows terminal and open the file with a regular path.
