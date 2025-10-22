@@ -64,3 +64,7 @@ Thanks for contributing [DanKaplanSES](https://github.com/DanKaplanSES), [abramt
 
 If you create a new issue please include your VLC Version number and operating system. Otherwise it's hard to reproduce.  
 The biggest help would be to contribute some Lua Code.
+
+## Donations
+
+[![liberapay](https://img.shields.io/liberapay/goal/surrim.svg?logo=liberapay)](https://liberapay.com/surrim/donate)
