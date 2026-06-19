@@ -71,7 +71,11 @@ end
 
 function command_exists(command)
 	retval, err = os.execute(command)
-	return retval ~= nil
+	if retval == 32512  or retval == 127 then
+    	return false
+ 	else
+		return retval ~= nil
+	end
 end
 
 function current_uri_and_os()
