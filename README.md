@@ -1,70 +1,73 @@
-# Install
+# VLC Delete
 
-## Windows
+When you're playing a media file, use VLC Delete to seamlessly delete the current file from your playlist **and your hard drive** with a single click.
 
-Copy `vlc-delete.lua` to `%appdata%\vlc\lua\extensions\` and restart the VLC Media Player.
+This extension has been heavily upgraded to include a Settings UI, Native OS Trash support (so files aren't permanently destroyed by default), a floating "Always On Top" deletion button, and robust cross-platform error handling. 
 
-### Installation script (requires Windows 10/11 / curl)
+It works out-of-the-box on GNU Linux, macOS, and Windows with VLC 2.x and 3.x.
 
-```batch
-mkdir "%appdata%\vlc\lua\extensions\"
-curl -# -o "%appdata%\vlc\lua\extensions\vlc-delete.lua" "https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua"
-```
+## Features
+- **1-Click Deletion:** Delete the currently playing file directly from the View menu.
+- **Native Trash/Recycle Bin Support:** Safely moves files to your OS Trash instead of permanently deleting them (`gio trash` or `trash-put` on Linux, `osascript` on macOS, and `PowerShell` on Windows).
+- **Settings UI:** Easily toggle confirmation dialogues, Trash usage, and a floating button.
+- **Floating Button:** An "Always On Top" button allowing you to delete the file without opening the menu.
+- **Cross-Platform:** Automatic detection and safe-escaping for Linux, Windows, and macOS paths.
 
-## Linux
+---
 
-Copy the `vlc-delete.lua` file to `~/.local/share/vlc/lua/extensions/` and restart the VLC Media Player.
+## Installation
 
-### Installation script
+### Linux
+1. Create the extensions folder if it doesn't exist:
+   ```bash
+   mkdir -p ~/.local/share/vlc/lua/extensions/
+   ```
+2. Copy the `vlc-delete.lua` file to that directory:
+   ```bash
+   cp vlc-delete.lua ~/.local/share/vlc/lua/extensions/
+   ```
+*(Note: If you installed VLC via Flatpak or Snap, the extensions path may differ. For Flatpak, it is usually `~/.var/app/org.videolan.VLC/data/vlc/lua/extensions/`)*
 
-```bash
-EXTENSIONS_FOLDER="$HOME/.local/share/vlc/lua/extensions"
-# EXTENSIONS_FOLDER="$HOME/.var/app/org.videolan.VLC/data/vlc/lua/extensions" # for Flatpak
-# EXTENSIONS_FOLDER="$HOME/snap/vlc/current/.local/share/vlc/lua/extensions" # for Snap
-# EXTENSIONS_FOLDER="$HOME/Library/Application Support/org.videolan.vlc/lua/extensions" # for Mac
+### Windows
+1. Open File Explorer and navigate to:
+   `%APPDATA%\vlc\lua\extensions\`
+   *(If the `lua` or `extensions` folders do not exist, create them).*
+2. Copy `vlc-delete.lua` into this folder.
 
-mkdir -p "$EXTENSIONS_FOLDER"
-curl -# -o "$EXTENSIONS_FOLDER/vlc-delete.lua" "https://raw.githubusercontent.com/surrim/vlc-delete/master/vlc-delete.lua"
-```
+### macOS
+1. Open Finder and navigate to:
+   `~/Library/Application Support/org.videolan.vlc/lua/extensions/`
+   *(If the folders do not exist, create them).*
+2. Copy `vlc-delete.lua` into this folder.
 
-Note: If [trash-cli](https://pypi.org/project/trash-cli/) is installed videos will be moved to the recycle bin instead of removing them directly.
+---
 
-# Usage
+## How to Use
 
-When playing a video you can click on `View` → `Remove current file from playlist and disk`. Then the video will be removed and the next one is played.
+After installation, restart VLC or go to **Tools -> Plugins and extensions**, click the **Active Extensions** tab, and hit **Reload extensions**.
 
-# Known bugs and issues
+VLC Delete will now be available in the **View** menu at the top of your VLC window.
 
-- There is no *fixed* shortcut key; it depends on the menu language.  
-  For instance in English: Press and hold `Alt`  to activate the hotkey navigation, then press `i` (`Vi̲ew`), then `r` (`R̲emove current file from playlist and disk`). I haven't found a solution to implement a fixed key; probably it's not supported by the VLC Media Player.  
-  ![Hotkeys animation](https://raw.githubusercontent.com/surrim/vlc-delete/master/hotkeys.webp)
-  - For AutoHotKey v2 and English menus, you can use the following script.
+### Accessing Settings & Configuring the Extension
+Due to limitations in how VLC's interface renders extension menus on certain Linux desktop environments (like XFCE), we implemented a clever fallback so you can always access your settings:
 
-```
-#Requires AutoHotkey v2.0
+1. **Stop any currently playing video.** (Press the Stop button `⏹` in VLC).
+2. Go to the **View** menu and click **VLC Delete**.
+3. Because no video is playing, the **Settings window** will automatically open.
 
-#HotIf WinActive("ahk_exe vlc.exe")
-^Delete:: {
-    Send("{Blind}{Ctrl up}{Delete up}")
-    Send("{Blind}{Alt down}{i down}{i up}{r down}{r up}{Alt up}")
-}
-#HotIf
-```
+From the Settings window, you can:
+- **Ask for confirmation:** If enabled, you will be prompted before a file is deleted.
+- **Send to Trash/Recycle Bin:** Highly recommended. Instead of permanent deletion, files will be moved to your system's Trash folder.
+- **Keep a floating 'Delete' button:** A small persistent window will stay on your screen. You can click it at any time while a video is playing to delete it instantly.
 
-Thanks for contributing [DanKaplanSES](https://github.com/DanKaplanSES), [abramter](https://github.com/abramter),
-[saiqulhaq](https://github.com/saiqulhaq) and [Francisco Corrales Morales](https://github.com/franciscocorrales).
+### Deleting a File
+1. Play any video or audio file.
+2. Go to **View -> VLC Delete**.
+3. The file will be immediately stopped, removed from the playlist, and deleted from your hard drive (or moved to the Trash, based on your settings).
 
-- Windows: UNC paths like `\SERVER\Share\File.mp4` are not working.  
-  As a workaround, you could use `net use P: "\uncpath"` in the Windows terminal and open the file with a regular path.
-  Thanks for contributing [Taomyn](https://github.com/Taomyn) and [freeload101](https://github.com/freeload101)
-- Windows: Video can't be deleted if the file name contains emojis.  
-  Thanks for contributing [Jonas1312](https://github.com/Jonas1312)
-- Does not work with VLC portable edition
-  Thanks for contributing [fun29](https://github.com/fun29)
+*Alternatively, if you enabled the **Floating Button** in Settings, you can simply click the floating "🗑️ Delete Current File" button while the video is playing.*
 
-If you create a new issue please include your VLC Version number and operating system. Otherwise it's hard to reproduce.  
-The biggest help would be to contribute some Lua Code.
+---
 
-## Donations
-
-[![liberapay](https://img.shields.io/liberapay/goal/surrim.svg?logo=liberapay)](https://liberapay.com/surrim/donate)
+## Disclaimer
+The author is not responsible for any accidental damage or data loss caused by this extension. It is strongly recommended to leave the "Send to Trash" setting enabled to prevent accidental permanent deletion.
